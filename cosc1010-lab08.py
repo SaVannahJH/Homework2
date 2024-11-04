@@ -112,6 +112,7 @@ print("*" * 75)
 # Create a second function that just does the square root operation 
     # If the number you are trying to take the square root of is negative, return null
 
+
 def square_root(x):
     """Calculate the square root of x. Return None if x is negative."""
     if x < 0:
