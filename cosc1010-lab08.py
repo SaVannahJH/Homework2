@@ -3,10 +3,10 @@
 # 11/4/2024
 # Lab 08
 # Lab Section:14
-# Sources, people worked with, help given to:
-# your
-# comments
-# here
+# Sources, people worked with, help given to: Chapter 7, 8, COSC1010_lec10-UserInputWhileLoops.pptx.pdf
+# COSC1010_lec11-Functions.pptx.pdf, https://www.w3schools.com/python/ref_string_isdigit.asp,
+# https://www.w3schools.com/python/ref_string_count.asp, COSC1010_lec13-FilesAndExceptions.pptx.pdf
+# 
 
 
 # Write a function that will properly check strings to see if they are an int or float, and convert them if so
@@ -15,20 +15,19 @@
 # Floats should only have one decimal point in them 
 
 def convert_string(s):
-    if s.isdigit():
+    """Check if the string can be converted to an int or float. Return the converted value or False."""
+    
+    if s.lstrip('-').isdigit():  
         return int(s)
     
-    try:
-        float_value = float(s)
+    if s.count('.') == 1:  
+        decimal_index = s.index('.')
         
-        if '.' in s:
-            parts = s.split('.')
-            if len(parts) > 2 or len(parts[1]) == 0:
-                return False
-            
-        return float_value
-    except ValueError:
-        return False
+        if s[:decimal_index].lstrip('-').isdigit():
+            if s[decimal_index + 1:].isdigit() or s[decimal_index + 1:] == '':
+                return float(s)
+    
+    return False
 
 print(convert_string("150"))     
 print(convert_string("55.61"))    
@@ -62,7 +61,9 @@ print("*" * 75)
 # Call your function and print the resulting list
 
 def slope_intercept(m, b, lower_bound, upper_bound):
-    if not (isinstance(lower_bound, int) and isinstance(upper_bound, int)):
+    """Calculate y values for the line y = mx + b for integer x in the given range."""
+    
+    if not (lower_bound == int(lower_bound) and upper_bound == int(upper_bound)):
         return False
     if lower_bound > upper_bound:
         return False
@@ -89,12 +90,16 @@ def main():
             upper_x = int(upper_x)  
             
             result = slope_intercept(m, b, lower_x, upper_x)
-            print(result)
+            if result is False:
+                print("Invalid input: bounds must be integers and lower bound must be less than or equal to upper bound.")
+            else:
+                print(f"The y values are: {result}")
         except ValueError:
             print("Invalid input. Please ensure you enter numbers for m, b, lower x, and upper x bounds.")
 
 if __name__ == "__main__":
     main()
+
 
 print("*" * 75)
 
@@ -108,23 +113,17 @@ print("*" * 75)
     # If the number you are trying to take the square root of is negative, return null
 
 def square_root(x):
-    """Calculate the square root of x using the Babylonian method. Return None if x is negative."""
+    """Calculate the square root of x. Return None if x is negative."""
     if x < 0:
         return None
-    guess = x / 2.0
-    while True:
-        new_guess = (guess + x / guess) / 2
-        if abs(new_guess - guess) < 1e-10: 
-            break
-        guess = new_guess
-    return guess
+    return x ** 0.5
 
 def solve_quadratic(a, b, c):
     """Solve the quadratic equation ax^2 + bx + c = 0."""
-    discriminant = b ** 2 - 4 * a * c
-    sqrt_discriminant = square_root(discriminant)
+    discriminant = b ** 2 - 4 * a * c  
+    sqrt_discriminant = square_root(discriminant)  
     
-    if sqrt_discriminant is None:
+    if sqrt_discriminant is None:  
         return None  
     
     root1 = (-b + sqrt_discriminant) / (2 * a)
@@ -134,21 +133,24 @@ def solve_quadratic(a, b, c):
 
 def main():
     while True:
-        user_input = input("Enter a, b, c (or type 'exit' to quit): ")
-        
+        user_input = input("Enter values for a, b, c (or type 'exit' to quit): ")
         if user_input.lower() == 'exit':
-            break
+            break  
         
+       
         try:
-            a, b, c = map(float, user_input.split())
+            parts = user_input.split()
+            a = float(parts[0])  
+            b = float(parts[1])  
+            c = float(parts[2])  
             
             roots = solve_quadratic(a, b, c)
             if roots is None:
                 print("The equation has no real roots.")
             else:
-                print(f"The roots are: {roots[0]} and {roots[1]}")
-        except ValueError:
-            print("Invalid input. Please ensure you enter numbers for a, b, and c.")
+                print("The roots are: ", roots[0], "and", roots[1])  # Print the roots
+        except (ValueError, IndexError):
+            print("Invalid input. Please enter three numbers for a, b, and c.")  # Handle errors
 
 if __name__ == "__main__":
-    main()
+    main() 
